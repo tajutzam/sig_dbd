@@ -10,4 +10,10 @@ $routes->get('/geochart', 'HomeController::index');
 
 
 
+// kecamatan
 $routes->get('/admin/kecamatan', "KecamatanController::index");
+$routes->get('/admin/kecamatan/create', "KecamatanController::create");
+$routes->post('/admin/kecamatan/store', "KecamatanController::store");
+$routes->get('/admin/kecamatan/edit/(:segment)', 'KecamatanController::edit/$1');
+$routes->post('/admin/kecamatan/update/(:segment)', 'KecamatanController::update/$1');
+$routes->get('/admin/kecamatan/delete/(:num)', 'KecamatanController::delete/$1');

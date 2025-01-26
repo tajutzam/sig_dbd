@@ -12,7 +12,15 @@ class Kecamatan extends Model
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = [];
+    protected $allowedFields    = [
+        "kode_wilayah",
+        "nama_kecamatan",
+        "file_geojson",
+        "latitude",
+        "longitude",
+        "created_at",
+        "updated_at"
+    ];
 
     protected bool $allowEmptyInserts = false;
     protected bool $updateOnlyChanged = true;

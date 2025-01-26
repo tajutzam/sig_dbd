@@ -5,7 +5,7 @@
             <h1 class="mt-4">Data Kecamatan</h1>
             <div class="d-flex justify-content-between">
                 <div>
-                    <a href="" class="btn btn-primary btm-sm">Tambah Kecamatan</a>
+                    <a href="<?= base_url('/admin/kecamatan/create'); ?>" class="btn btn-primary btm-sm">Tambah Kecamatan</a>
                 </div>
                 <ol class="breadcrumb mb-4">
                     <li class="breadcrumb-item">dashboard</li>
@@ -53,8 +53,8 @@
                                         <td><?= $item['latitude']; ?></td>
                                         <td>
                                             <div class="d-flex gap-2">
-                                                <a href="" class="btn btn-warning btn-sm">Edit</a>
-                                                <a href="" class="btn btn-warning btn-danger">Delete</a>
+                                                <a href="<?= base_url('/admin/kecamatan/edit/' . $item['id']); ?>" class="btn btn-warning btn-sm">Edit</a>
+                                                <a href="<?= base_url('/admin/kecamatan/delete/' . $item['id']); ?>" href="" class="btn btn-warning btn-danger">Delete</a>
                                             </div>
                                         </td>
                                     </tr>
@@ -64,7 +64,6 @@
                     </div>
                 </div>
             </div>
-
         </div>
     </main>
 </div>
