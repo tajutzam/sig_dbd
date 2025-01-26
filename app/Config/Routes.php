@@ -7,3 +7,7 @@ use CodeIgniter\Router\RouteCollection;
  */
 $routes->get('/', 'Home::index');
 $routes->get('/geochart', 'HomeController::index');
+
+
+
+$routes->get('/admin/kecamatan', "KecamatanController::index");
