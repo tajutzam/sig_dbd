@@ -25,3 +25,10 @@ $routes->post('/admin/tahun/store', "TahunController::store");
 $routes->get('/admin/tahun/delete/(:num)', 'TahunController::delete/$1');
 $routes->get('/admin/tahun/edit/(:segment)', 'TahunController::edit/$1');
 $routes->post('/admin/tahun/update/(:segment)', 'TahunController::update/$1');
+
+$routes->get('/admin/puskesmas', "PuskesmasController::index");
+$routes->get('/admin/puskesmas/create', "PuskesmasController::create");
+$routes->post('/admin/puskesmas/store', "PuskesmasController::store");
+$routes->get('/admin/puskesmas/delete/(:num)', 'PuskesmasController::delete/$1');
+$routes->get('/admin/puskesmas/edit/(:segment)', 'PuskesmasController::edit/$1');
+$routes->post('/admin/puskesmas/update/(:segment)', 'PuskesmasController::update/$1');
