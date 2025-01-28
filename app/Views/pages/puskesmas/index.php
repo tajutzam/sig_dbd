@@ -37,7 +37,7 @@
                                         <td>
                                             <div class="d-flex gap-2">
                                                 <a href="<?= base_url('/admin/puskesmas/edit/' . $item['id']); ?>" class="btn btn-sm btn-warning">Edit</a>
-                                                <a href="" class="btn btn-sm btn-danger">Delete</a>
+                                                <a href="<?= base_url('/admin/puskesmas/delete/' . $item['id']); ?>" class="btn btn-sm btn-danger">Delete</a>
                                             </div>
                                         </td>
                                     </tr>

@@ -4,7 +4,7 @@
         <div class="container-fluid px-4">
             <h1 class="mt-4">Data Kasus DBD</h1>
             <div class="d-flex justify-content-between">
-                <div><a href="<?= base_url('/admin/kasus_dbd/create'); ?>" class="btn btn-primary btn-sm">Tambah Data Kasus DBD</a></div>
+                <div><a href="<?= base_url('/admin/dbd/create'); ?>" class="btn btn-primary btn-sm">Tambah Data Kasus DBD</a></div>
                 <ol class="breadcrumb mb-4">
                     <li class="breadcrumb-item">dashboard</li>
                     <li class="breadcrumb-item active">Kasus DBD</li>
@@ -50,8 +50,8 @@
                                         <td><?= $item['jumlah_rumah_bebas_jentik'] ?></td>
                                         <td style="width: 200px;">
                                             <div class="d-flex gap-2">
-                                                <a href="<?= base_url('/admin/kasus_dbd/edit/' . $item['id']); ?>" class="btn btn-warning btn-sm">Edit</a>
-                                                <a href="<?= base_url('/admin/kasus_dbd/delete/' . $item['id']); ?>" class="btn btn-danger btn-sm">Delete</a>
+                                                <a href="<?= base_url('/admin/dbd/edit/' . $item['id']); ?>" class="btn btn-warning btn-sm">Edit</a>
+                                                <a href="<?= base_url('/admin/dbd/delete/' . $item['id']); ?>" class="btn btn-danger btn-sm">Delete</a>
                                             </div>
                                         </td>
                                     </tr>

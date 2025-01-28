@@ -32,3 +32,11 @@ $routes->post('/admin/puskesmas/store', "PuskesmasController::store");
 $routes->get('/admin/puskesmas/delete/(:num)', 'PuskesmasController::delete/$1');
 $routes->get('/admin/puskesmas/edit/(:segment)', 'PuskesmasController::edit/$1');
 $routes->post('/admin/puskesmas/update/(:segment)', 'PuskesmasController::update/$1');
+
+
+$routes->get('/admin/dbd', "DataKasusDbdController::index");
+$routes->get('/admin/dbd/create', "DataKasusDbdController::create");
+$routes->post('/admin/dbd/store', "DataKasusDbdController::store");
+$routes->get('/admin/dbd/delete/(:num)', 'DataKasusDbdController::delete/$1');
+$routes->get('/admin/dbd/edit/(:segment)', 'DataKasusDbdController::edit/$1');
+$routes->post('/admin/dbd/update/(:segment)', 'DataKasusDbdController::update/$1');

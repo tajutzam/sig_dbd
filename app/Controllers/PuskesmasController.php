@@ -106,4 +106,18 @@ class PuskesmasController extends BaseController
 
         return view('/pages/puskesmas/edit', $data);
     }
+
+    public function delete($id)
+    {
+        $model = new Puskesmas();
+
+        $data['puskesmas'] = $model->findPuskesmasWithKecamatan($id);
+
+        if (!$data['puskesmas']) {
+            return redirect()->back()->with('error', 'data puskesmas tidak ditemukan!');
+        }
+
+        $model->delete($id);
+        return redirect()->back()->with('success', 'berhasil menghapus data puskesmas');
+    }
 }
