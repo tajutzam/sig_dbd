@@ -17,3 +17,11 @@ $routes->post('/admin/kecamatan/store', "KecamatanController::store");
 $routes->get('/admin/kecamatan/edit/(:segment)', 'KecamatanController::edit/$1');
 $routes->post('/admin/kecamatan/update/(:segment)', 'KecamatanController::update/$1');
 $routes->get('/admin/kecamatan/delete/(:num)', 'KecamatanController::delete/$1');
+
+
+$routes->get('/admin/tahun', "TahunController::index");
+$routes->get('/admin/tahun/create', "TahunController::create");
+$routes->post('/admin/tahun/store', "TahunController::store");
+$routes->get('/admin/tahun/delete/(:num)', 'TahunController::delete/$1');
+$routes->get('/admin/tahun/edit/(:segment)', 'TahunController::edit/$1');
+$routes->post('/admin/tahun/update/(:segment)', 'TahunController::update/$1');

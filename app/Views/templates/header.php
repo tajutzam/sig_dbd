@@ -58,10 +58,10 @@
                         </a>
                         <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                             <nav class="sb-sidenav-menu-nested nav">
-                                <a class="nav-link" href="layout-static.html">Data DBD</a>
-                                <a class="nav-link" href="layout-sidenav-light.html">Data Kecamatan</a>
-                                <a class="nav-link" href="layout-sidenav-light.html">Data Puskesmas</a>
-                                <a class="nav-link" href="layout-sidenav-light.html">Tahun</a>
+                                <a class="nav-link" href="<?= base_url('/admin/dbd'); ?>">Data DBD</a>
+                                <a class="nav-link" href="<?= base_url('/admin/kecamatan'); ?>">Data Kecamatan</a>
+                                <a class="nav-link" href="<?= base_url('/admin/puskesmas'); ?>">Data Puskesmas</a>
+                                <a class="nav-link" href="<?= base_url('/admin/tahun'); ?>">Tahun</a>
                             </nav>
                         </div>
                     </div>
