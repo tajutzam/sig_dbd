@@ -39,7 +39,7 @@ class DataKasusDbdController extends BaseController
         // Validasi input
         $validation = $this->validate([
             'tahun_id' => 'required',
-            'puskesmas_id' => 'required',
+            'puskesmas_id' => 'required|is_not_unique[puskesmas.id]',
             'jumlah_penduduk' => 'required|numeric',
             'jumlah_kasus' => 'required|numeric',
             'jumlah_kematian' => 'required|numeric',

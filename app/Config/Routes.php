@@ -5,8 +5,7 @@ use CodeIgniter\Router\RouteCollection;
 /**
  * @var RouteCollection $routes
  */
-$routes->get('/', 'Home::index');
-$routes->get('/geochart', 'HomeController::index');
+$routes->get('/admin', 'Home::index');
 
 
 
@@ -40,3 +39,7 @@ $routes->post('/admin/dbd/store', "DataKasusDbdController::store");
 $routes->get('/admin/dbd/delete/(:num)', 'DataKasusDbdController::delete/$1');
 $routes->get('/admin/dbd/edit/(:segment)', 'DataKasusDbdController::edit/$1');
 $routes->post('/admin/dbd/update/(:segment)', 'DataKasusDbdController::update/$1');
+
+
+
+$routes->get('/admin/pemetaan', 'PemetaanController::index');

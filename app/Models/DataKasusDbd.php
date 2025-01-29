@@ -73,10 +73,26 @@ class DataKasusDbd extends Model
 
     public function getKasusDbdByTahun($tahun_id)
     {
-        return $this->select('data_kasus_dbd.*, tahun.tahun, puskesmas.nama_puskesmas')
+        // Ambil data kasus DBD berdasarkan tahun
+        $data = $this->select('data_kasus_dbd.*, tahun.tahun, puskesmas.nama_puskesmas, puskesmas.latitude as latitude_puskesmas, puskesmas.longitude as longitude_puskesmas, kecamatan.*')
             ->join('tahun', 'tahun.id = data_kasus_dbd.tahun_id')
             ->join('puskesmas', 'puskesmas.id = data_kasus_dbd.puskesmas_id')
+            ->join('kecamatan', 'kecamatan.id = puskesmas.kecamatan_id')
             ->where('data_kasus_dbd.tahun_id', $tahun_id)
             ->findAll();
+
+        // Hitung R, CFR, dan ABJ untuk setiap data
+        foreach ($data as &$item) {
+            // Hitung R (Risiko) = (jumlah kasus / jumlah penduduk) * 100
+            $item['IR'] = ($item['jumlah_kasus'] / $item['jumlah_penduduk']) * 100;
+
+            // Hitung CFR (Case Fatality Rate) = (jumlah kematian / jumlah kasus) * 100
+            $item['CFR'] = ($item['jumlah_kematian'] / $item['jumlah_kasus']) * 100;
+
+            // Hitung ABJ (Angka Bebas Jentik) = (jumlah rumah bebas jentik / jumlah rumah yang diperiksa) * 100
+            $item['ABJ'] = ($item['jumlah_rumah_bebas_jentik'] / $item['jumlah_rumah_diperiksa']) * 100;
+        }
+
+        return $data;
     }
 }

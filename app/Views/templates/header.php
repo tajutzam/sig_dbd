@@ -10,6 +10,7 @@
     <title>Dashboard - SB Admin</title>
     <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
     <link href="<?= base_url('/css/styles.css'); ?>" rel="stylesheet" />
+    <link rel="stylesheet" href="<?= base_url('/map/leaflet.css'); ?>" />
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
 </head>
 
@@ -42,11 +43,11 @@
                 <div class="sb-sidenav-menu">
                     <div class="nav" style="color: black;">
                         <div class="sb-sidenav-menu-heading">Core</div>
-                        <a class="nav-link" href="index.html">
+                        <a class="nav-link" href="<?= base_url('/admin'); ?>">
                             <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                             Beranda
                         </a>
-                        <a class="nav-link" href="index.html">
+                        <a class="nav-link" href="<?= base_url('/admin/pemetaan'); ?>">
                             <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                             Pemetaan
                         </a>
