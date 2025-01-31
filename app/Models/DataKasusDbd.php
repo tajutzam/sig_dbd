@@ -29,7 +29,7 @@ class DataKasusDbd extends Model
     protected array $castHandlers = [];
 
     // Dates
-    protected $useTimestamps = false;
+    protected $useTimestamps = true;
     protected $dateFormat    = 'datetime';
     protected $createdField  = 'created_at';
     protected $updatedField  = 'updated_at';
@@ -81,16 +81,58 @@ class DataKasusDbd extends Model
             ->where('data_kasus_dbd.tahun_id', $tahun_id)
             ->findAll();
 
-        // Hitung R, CFR, dan ABJ untuk setiap data
+        // Hitung IR, CFR, ABJ dan tentukan warna risiko
         foreach ($data as &$item) {
-            // Hitung R (Risiko) = (jumlah kasus / jumlah penduduk) * 100
-            $item['IR'] = ($item['jumlah_kasus'] / $item['jumlah_penduduk']) * 100;
+            // Hindari pembagian dengan nol
+            $jumlahPenduduk = max($item['jumlah_penduduk'], 1);
+            $jumlahKasus = max($item['jumlah_kasus'], 1);
+            $jumlahRumahDiperiksa = max($item['jumlah_rumah_diperiksa'], 1);
+
+            // Hitung IR (Incident Rate) = (jumlah kasus / jumlah penduduk) * 100.000
+            $item['IR'] = ($item['jumlah_kasus'] / $jumlahPenduduk) * 100000;
 
             // Hitung CFR (Case Fatality Rate) = (jumlah kematian / jumlah kasus) * 100
-            $item['CFR'] = ($item['jumlah_kematian'] / $item['jumlah_kasus']) * 100;
+            $item['CFR'] = ($item['jumlah_kematian'] / $jumlahKasus) * 100;
 
-            // Hitung ABJ (Angka Bebas Jentik) = (jumlah rumah bebas jentik / jumlah rumah yang diperiksa) * 100
-            $item['ABJ'] = ($item['jumlah_rumah_bebas_jentik'] / $item['jumlah_rumah_diperiksa']) * 100;
+            // Hitung ABJ (Angka Bebas Jentik) = (jumlah rumah bebas jentik / jumlah rumah yang diperiksa)
+            $item['ABJ'] = ($item['jumlah_rumah_bebas_jentik'] / $jumlahRumahDiperiksa);
+
+            // Menentukan level risiko berdasarkan IR
+            if ($item['IR'] > 100) {
+                $item['risiko_IR'] = 'tinggi';
+            } elseif ($item['IR'] >= 50) {
+                $item['risiko_IR'] = 'sedang';
+            } else {
+                $item['risiko_IR'] = 'rendah';
+            }
+
+            if ($item['CFR'] > 1) {
+                $item['risiko_CFR'] = 'tinggi';
+            } elseif ($item['CFR'] >= 0.5) {
+                $item['risiko_CFR'] = 'sedang';
+            } else {
+                $item['risiko_CFR'] = 'rendah';
+            }
+
+            // Menentukan level risiko berdasarkan ABJ
+            if ($item['ABJ'] <= 0.95) {
+                $item['risiko_ABJ'] = 'tinggi';
+            } elseif ($item['ABJ'] >= 0.95 && $item['ABJ'] <= 98) {
+                $item['risiko_ABJ'] = 'sedang';
+            } else {
+                $item['risiko_ABJ'] = 'rendah';
+            }
+
+            // Tentukan warna berdasarkan kombinasi risiko
+            if ($item['risiko_IR'] == 'tinggi' && $item['risiko_CFR'] == 'tinggi' && $item['risiko_ABJ'] == 'tinggi') {
+                $item['warna_risiko'] = 'red'; // Merah - Kerawanan Tinggi
+            } elseif ($item['risiko_IR'] == 'tinggi' && $item['risiko_CFR'] == 'sedang' && $item['risiko_ABJ'] == 'rendah') {
+                $item['warna_risiko'] = 'orange'; // Oranye - Kerawanan Sedang
+            } elseif ($item['risiko_IR'] == 'rendah' && $item['risiko_CFR'] == 'rendah' && $item['risiko_ABJ'] == 'rendah') {
+                $item['warna_risiko'] = 'yellow'; // Kuning - Kerawanan Rendah
+            } else {
+                $item['warna_risiko'] = 'yellow'; // Hijau - Normal/Selamat
+            }
         }
 
         return $data;

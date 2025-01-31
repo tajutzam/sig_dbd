@@ -4,19 +4,15 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class Tahun extends Model
+class Artikel extends Model
 {
-    protected $table            = 'tahun';
+    protected $table            = 'artikels';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = [
-        'tahun',
-        'created_at',
-        'updated_at'
-    ];
+    protected $allowedFields = ['judul', 'image', 'author', 'description'];
 
     protected bool $allowEmptyInserts = false;
     protected bool $updateOnlyChanged = true;

@@ -1,124 +1,111 @@
-<?= $this->include('/templates/header.php'); ?>
-<div id="layoutSidenav_content">
+<?= $this->include('templates/header_user.php'); ?>
+<style>
+    .overlay {
+        width: 200px;
+        height: 30%;
+        background-color: #D9D9D9;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        font-weight: bold;
+        position: absolute;
+        right: 0;
+        z-index: 9999;
+        padding: 10px 20px;
+    }
 
-    <style>
-        .overlay {
-            width: 200px;
-            height: 30%;
-            background-color: #D9D9D9;
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-            font-weight: bold;
-            position: absolute;
-            right: 0;
-            z-index: 9999;
-            padding: 10px 20px;
-        }
+    #map-container {
+        position: relative;
+        width: 100%;
+        /* Make the container responsive */
+        height: 500px;
+        /* Set fixed height for better appearance */
+    }
 
-
-        #map-container {
-            position: relative;
-            width: 80%;
-            height: 500px;
-        }
-
-        #map {
-            width: 100%;
-            height: 100%;
-        }
-    </style>
-
-    <main>
-        <div class="container-fluid px-4 mt-4">
-            <div class="card mb-3">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between">
-                        <form method="get" class="mb-3">
-                            <label for="tahun" class="form-label">Tampilkan Berdasarkan Tahun</label>
-                            <div class="row align-items-center">
-                                <div class="col-md-6">
-                                    <select name="tahun" id="tahun" class="form-select mt-2" onchange="this.form.submit()">
-                                        <?php foreach ($tahunall as $item) : ?>
-                                            <option value="<?= $item['tahun']; ?>" <?= ($item['tahun'] == $tahun) ? 'selected' : ''; ?>>
-                                                <?= $item['tahun']; ?>
-                                            </option>
-                                        <?php endforeach; ?>
-                                    </select>
-                                </div>
-                            </div>
-                        </form>
-
-                        <ol class="breadcrumb mb-4">
-                            <li class="breadcrumb-item">Dashboard</li>
-                            <li class="breadcrumb-item active">Pemetaan</li>
-                        </ol>
+    #map {
+        width: 100%;
+        /* Ensure the map takes full width of its container */
+        height: 100%;
+        /* Ensure the map takes full height of its container */
+    }
+</style>
+<main class="container">
+    <div class="card mb-2">
+        <div class="card-body">
+            <form method="get" class="mb-3">
+                <label for="tahun" class="form-label">Tampilkan Berdasarkan Tahun</label>
+                <div class="row align-items-center">
+                    <div class="col-md-6">
+                        <select name="tahun" id="tahun" class="form-select mt-2" onchange="this.form.submit()">
+                            <?php foreach ($tahunall as $item) : ?>
+                                <option value="<?= $item['tahun']; ?>" <?= ($item['tahun'] == $tahun) ? 'selected' : ''; ?>>
+                                    <?= $item['tahun']; ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
                     </div>
                 </div>
-            </div>
-            <div class="card">
-                <div class="card-body">
-                    <div class="d-flex gap-2">
-                        <div id="map-container">
-                            <div class="overlay" style="bottom: 0px; height: 200px;">
-                                <div>
-                                    <div class="d-flex gap-2 align-items-center mb-2">
-                                        <div class="box" style="height: 30px; width:30px; background-color: red;">
-                                        </div>
-                                        <h5 style="font-weight: bold;" class="text-black">= Tinggi</h5>
-                                    </div>
-                                    <div class="d-flex gap-2 align-items-center mb-2">
-                                        <div class="box" style="height: 30px; width:30px; background-color: orange;">
-                                        </div>
-                                        <h5 style="font-weight: bold;" class="text-black">= Sedang</h5>
-                                    </div>
-                                    <div class="d-flex gap-2 align-items-center mb-2">
-                                        <div class="box" style="height: 30px; width:30px; background-color: yellow;">
-                                        </div>
-                                        <h5 style="font-weight: bold;" class="text-black">= Rendah</h5>
-                                    </div>
-                                </div>
+            </form>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-body">
+            <div class="d-flex gap-2">
+                <div id="map-container">
+                    <div class="overlay" style="bottom: 0px; height: 200px;">
+                        <div>
+                            <div class="d-flex gap-2 align-items-center mb-2">
+                                <div class="box" style="height: 30px; width:30px; background-color: red;"></div>
+                                <h5 style="font-weight: bold;" class="text-black">= Tinggi</h5>
                             </div>
-                            <div id="map"></div>
-                        </div>
-                        <div style="height: 600px;" class="overflow-scroll">
-                            <h6 class="ml-2 bg-primary px-3 py-2 text-white">Pembagian <?= sizeof($kecamatan); ?> Kecamatan</h6>
-                            <ol id="kecamatan-list">
-                                <?php foreach ($kecamatan as $item) : ?>
-                                    <?php
-                                    // Cari data kasus DBD yang sesuai dengan kecamatan ini
-                                    $dataKasus = array_filter($kasus, function ($kasusItem) use ($item) {
-                                        return $kasusItem['nama_kecamatan'] === $item['nama_kecamatan'];
-                                    });
-                                    $dataKasus = !empty($dataKasus) ? array_values($dataKasus)[0] : null;
-                                    ?>
-                                    <li id="kecamatan-<?= $item['nama_kecamatan'] ?>">
-                                        <strong><?= $item['nama_kecamatan'] ?></strong><br>
-                                        <?php if ($dataKasus) : ?>
-                                            <!--                                             
-                                            <small>
-                                                Jumlah Kasus: <?= $dataKasus['jumlah_kasus'] ?><br>
-                                                Jumlah Kematian: <?= $dataKasus['jumlah_kematian'] ?><br>
-                                                Rumah Diperiksa: <?= $dataKasus['jumlah_rumah_diperiksa'] ?><br>
-                                                Rumah Bebas Jentik: <?= $dataKasus['jumlah_rumah_bebas_jentik'] ?>
-                                            </small>
-                                             -->
-                                        <?php else : ?>
-                                            <small>Tidak ada data kasus DBD untuk kecamatan ini.</small>
-                                        <?php endif; ?>
-                                        <div style="height: 40px; width: 40px;" class="color-box" id="color-box-<?= $item['nama_kecamatan'] ?>"></div>
-                                    </li>
-                                <?php endforeach; ?>
-                            </ol>
+                            <div class="d-flex gap-2 align-items-center mb-2">
+                                <div class="box" style="height: 30px; width:30px; background-color: orange;"></div>
+                                <h5 style="font-weight: bold;" class="text-black">= Sedang</h5>
+                            </div>
+                            <div class="d-flex gap-2 align-items-center mb-2">
+                                <div class="box" style="height: 30px; width:30px; background-color: yellow;"></div>
+                                <h5 style="font-weight: bold;" class="text-black">= Rendah</h5>
+                            </div>
                         </div>
                     </div>
+                    <div id="map"></div>
+                </div>
+                <div style="height: 600px;" class="overflow-scroll">
+                    <h6 class="ml-2 bg-primary px-3 py-2 text-white">Pembagian <?= sizeof($kecamatan); ?> Kecamatan</h6>
+                    <ol id="kecamatan-list">
+                        <?php foreach ($kecamatan as $item) : ?>
+                            <?php
+                            // Cari data kasus DBD yang sesuai dengan kecamatan ini
+                            $dataKasus = array_filter($kasus, function ($kasusItem) use ($item) {
+                                return $kasusItem['nama_kecamatan'] === $item['nama_kecamatan'];
+                            });
+                            $dataKasus = !empty($dataKasus) ? array_values($dataKasus)[0] : null;
+                            ?>
+                            <li id="kecamatan-<?= $item['nama_kecamatan'] ?>">
+                                <strong><?= $item['nama_kecamatan'] ?></strong><br>
+                                <?php if ($dataKasus) : ?>
+                                    <!--
+                                        <small>
+                                            Jumlah Kasus: <?= $dataKasus['jumlah_kasus'] ?><br>
+                                            Jumlah Kematian: <?= $dataKasus['jumlah_kematian'] ?><br>
+                                            Rumah Diperiksa: <?= $dataKasus['jumlah_rumah_diperiksa'] ?><br>
+                                            Rumah Bebas Jentik: <?= $dataKasus['jumlah_rumah_bebas_jentik'] ?>
+                                        </small>
+                                    -->
+                                <?php else : ?>
+                                    <small>Tidak ada data kasus DBD untuk kecamatan ini.</small>
+                                <?php endif; ?>
+                                <div style="height: 40px; width: 40px;" class="color-box" id="color-box-<?= $item['nama_kecamatan'] ?>"></div>
+                            </li>
+                        <?php endforeach; ?>
+                    </ol>
                 </div>
             </div>
         </div>
-    </main>
-</div>
+    </div>
+</main>
 
 <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-ajax/2.0.0/leaflet.ajax.min.js"></script>
@@ -280,5 +267,4 @@
     // Tambahkan marker puskesmas setelah peta selesai dimuat
     addPuskesmasMarkers();
 </script>
-
-<?= $this->include('/templates/footer.php'); ?>
+<?= $this->include('templates/footer_user.php'); ?>

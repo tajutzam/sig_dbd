@@ -17,7 +17,9 @@
 <body class="sb-nav-fixed">
     <nav class="sb-topnav navbar navbar-expand navbar-dark" style="background-color: #EAD28496;">
         <!-- Navbar Brand-->
-        <a class="navbar-brand ps-3 text-black-50" style="font-weight: bold;" href="/admin/index">Sig DBD</a>
+        <a class="navbar-brand ps-3 text-black-50" style="font-weight: bold;" href="/admin/index">
+            <img src="/logo.png" alt="" height="50">
+        </a>
         <!-- Sidebar Toggle-->
         <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0 text-black-50" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
         <!-- Navbar Search-->
@@ -32,7 +34,7 @@
                     <li>
                         <hr class="dropdown-divider" />
                     </li>
-                    <li><a class="dropdown-item" href="#!">Logout</a></li>
+                    <li><a class="dropdown-item" href="/logout">Logout</a></li>
                 </ul>
             </li>
         </ul>
@@ -48,7 +50,8 @@
                             Beranda
                         </a>
                         <a class="nav-link" href="<?= base_url('/admin/pemetaan'); ?>">
-                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                            <div class="sb-nav-link-icon"><i class="fas fa-map-marker-alt"></i>
+                            </div>
                             Pemetaan
                         </a>
                         <div class="sb-sidenav-menu-heading">Data</div>
@@ -63,13 +66,15 @@
                                 <a class="nav-link" href="<?= base_url('/admin/kecamatan'); ?>">Data Kecamatan</a>
                                 <a class="nav-link" href="<?= base_url('/admin/puskesmas'); ?>">Data Puskesmas</a>
                                 <a class="nav-link" href="<?= base_url('/admin/tahun'); ?>">Tahun</a>
+                                <a class="nav-link" href="<?= base_url('/admin/artikel'); ?>">Artikel</a>
+
                             </nav>
                         </div>
                     </div>
                 </div>
                 <div class="sb-sidenav-footer">
                     <div class="small">Logged in as:</div>
-                    Admin
+                    <?= session('username'); ?>
                 </div>
             </nav>
         </div>
