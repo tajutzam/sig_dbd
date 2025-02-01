@@ -51,6 +51,7 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
     $routes->get('/admin/dbd/delete/(:num)', 'DataKasusDbdController::delete/$1');
     $routes->get('/admin/dbd/edit/(:segment)', 'DataKasusDbdController::edit/$1');
     $routes->post('/admin/dbd/update/(:segment)', 'DataKasusDbdController::update/$1');
+    $routes->post('/admin/dbd/export' , 'DataKasusDbdController::export');
 
 
     $routes->get('/admin/artikel', 'ArtikelController::index');
