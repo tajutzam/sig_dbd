@@ -70,12 +70,12 @@
                                         <h5 style="font-weight: bold;" class="text-black">= Tinggi</h5>
                                     </div>
                                     <div class="d-flex gap-2 align-items-center mb-2">
-                                        <div class="box" style="height: 30px; width:30px; background-color: orange;">
+                                        <div class="box" style="height: 30px; width:30px; background-color: yellow;">
                                         </div>
                                         <h5 style="font-weight: bold;" class="text-black">= Sedang</h5>
                                     </div>
                                     <div class="d-flex gap-2 align-items-center mb-2">
-                                        <div class="box" style="height: 30px; width:30px; background-color: yellow;">
+                                        <div class="box" style="height: 30px; width:30px; background-color: green;">
                                         </div>
                                         <h5 style="font-weight: bold;" class="text-black">= Rendah</h5>
                                     </div>

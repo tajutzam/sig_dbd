@@ -28,7 +28,7 @@ class Database extends Config
         'DSN'          => '',
         'hostname'     => 'localhost',
         'username'     => 'root',
-        'password'     => '',
+        'password'     => 'root',
         'database'     => 'sig_dbd_probolinggo',
         'DBDriver'     => 'MySQLi',
         'DBPrefix'     => '',

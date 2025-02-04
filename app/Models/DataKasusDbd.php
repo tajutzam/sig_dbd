@@ -95,7 +95,7 @@ class DataKasusDbd extends Model
             $item['CFR'] = ($item['jumlah_kematian'] / $jumlahKasus) * 100;
 
             // Hitung ABJ (Angka Bebas Jentik) = (jumlah rumah bebas jentik / jumlah rumah yang diperiksa)
-            $item['ABJ'] = ($item['jumlah_rumah_bebas_jentik'] / $jumlahRumahDiperiksa);
+            $item['ABJ'] = ($item['jumlah_rumah_bebas_jentik'] / $jumlahRumahDiperiksa) * 100;
 
             // Menentukan level risiko berdasarkan IR
             if ($item['IR'] > 100) {
@@ -127,11 +127,11 @@ class DataKasusDbd extends Model
             if ($item['risiko_IR'] == 'tinggi' && $item['risiko_CFR'] == 'tinggi' && $item['risiko_ABJ'] == 'tinggi') {
                 $item['warna_risiko'] = 'red'; // Merah - Kerawanan Tinggi
             } elseif ($item['risiko_IR'] == 'tinggi' && $item['risiko_CFR'] == 'sedang' && $item['risiko_ABJ'] == 'rendah') {
-                $item['warna_risiko'] = 'orange'; // Oranye - Kerawanan Sedang
+                $item['warna_risiko'] = 'yellow'; // Oranye - Kerawanan Sedang
             } elseif ($item['risiko_IR'] == 'rendah' && $item['risiko_CFR'] == 'rendah' && $item['risiko_ABJ'] == 'rendah') {
-                $item['warna_risiko'] = 'yellow'; // Kuning - Kerawanan Rendah
+                $item['warna_risiko'] = 'green'; // Kuning - Kerawanan Rendah
             } else {
-                $item['warna_risiko'] = 'yellow'; // Hijau - Normal/Selamat
+                $item['warna_risiko'] = 'green'; // Hijau - Normal/Selamat
             }
         }
 

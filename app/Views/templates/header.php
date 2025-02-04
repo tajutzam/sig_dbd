@@ -18,7 +18,12 @@
     <nav class="sb-topnav navbar navbar-expand navbar-dark" style="background-color: #EAD28496;">
         <!-- Navbar Brand-->
         <a class="navbar-brand ps-3 text-black-50" style="font-weight: bold;" href="/admin/index">
-            <img src="/logo.png" alt="" height="50">
+            <div class="d-flex gap-2 align-items-center">
+                <img src="/logo.png" alt="" height="50">
+                <h4 style="font-size: 15px;">
+                    SIG Kabupaten <br> Probolinggo
+                </h4>
+            </div>
         </a>
         <!-- Sidebar Toggle-->
         <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0 text-black-50" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
