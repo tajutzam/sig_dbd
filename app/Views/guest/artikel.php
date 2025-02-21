@@ -21,7 +21,7 @@
                         <img src="<?= base_url('/uploads/') . $item['image']; ?>" class="img-fluid mb-3" alt="Gejala DBD">
                         <p><small><?= $item['author']; ?> - <?= $item['updated_at']; ?></small></p>
                         <p class="card-text"><?= $item['description']; ?></p>
-                        <a href="#" class="btn btn-read btn-primary">READ MORE</a>
+                        <a href="<?= base_url('/artikel/'.$item['id']) ;?>" class="btn btn-read btn-primary">READ MORE</a>
                     </div>
                 </div>
             </div>

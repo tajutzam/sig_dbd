@@ -96,7 +96,7 @@ class ArtikelController extends BaseController
             $file->move(WRITEPATH . '../public/uploads', $imageName);
         } else {
             // If no new image uploaded, keep the current image
-            $imageName = $this->request->getPost('old_image');
+            $imageName = $this->request->getPost('S');
         }
 
         // Update the article data
@@ -131,5 +131,15 @@ class ArtikelController extends BaseController
 
         // Redirect to the articles list with a success message
         return redirect()->to('/admin/artikel')->with('success', 'Artikel berhasil dihapus');
+    }
+
+
+    public function show($id)
+    {
+        $artikel = new Artikel();
+        $data['artikel'] = $artikel->find($id);
+
+        return view('/guest/detail-artikel' , $data);
+
     }
 }

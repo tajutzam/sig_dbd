@@ -112,16 +112,12 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-ajax/2.0.0/leaflet.ajax.min.js"></script>
 
 <script>
-    var map = L.map('map').setView([-7.756928, 113.211502], 7); // Koordinat awal dengan zoom level 7
+    var map = L.map('map').setView([-7.756928, 113.211502], 10);
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
 
-    // Fungsi untuk memberikan warna acak untuk setiap GeoJSON feature
-
-
-    // Fungsi untuk menghasilkan warna acak dalam format hex
     function getRandomColor() {
         var letters = "0123456789ABCDEF";
         var color = "#";
@@ -131,40 +127,39 @@
         return color;
     }
 
-    // Data kasus DBD dari PHP
     var kasusData = <?= json_encode($kasus); ?>;
     var kecamatanData = <?= json_encode($kecamatan); ?>;
 
-
-    console.log(kasusData);
-
     var geojsonLayers = {};
-
-
     var districtColors = {};
 
-    // Style function to apply color to the boundaries
+    // Inisialisasi warna untuk setiap kecamatan
+    kecamatanData.forEach(item => {
+        districtColors[item.nama_kecamatan] = getRandomColor();
+    });
+
+
+    Object.keys(districtColors).forEach(district => {
+        var colorBox = document.getElementById('color-box-' + district);
+        if (colorBox) {
+            colorBox.style.backgroundColor = districtColors[district];
+            colorBox.style.border = `2px solid ${districtColors[district]}`;
+        }
+    });
+
+
+
     function style(feature) {
         var district = feature.properties.district;
-        var dataKecamatan = kasusData.find(item => item.nama_kecamatan === district);
-
-        // Assign color based on the data or random color
-        if (!districtColors[district]) {
-            districtColors[district] = getRandomColor(); // Assign a random color if not already set
-        }
-
         return {
-            fillColor: "gray", // Risk color from data
-            weight: 5,
+            fillColor: "gray",
+            weight: 2,
             opacity: 1,
-            color: districtColors[district], // Border color (from random color)
+            color: districtColors[district],
             fillOpacity: 0.7
         };
     }
 
-
-    // Fungsi untuk memuat dan menambahkan data GeoJSON ke peta dengan gaya tertentu
-    // Fungsi untuk memuat dan menambahkan data GeoJSON ke peta dengan gaya tertentu
     function addGeoJSONLayer(url, kecamatan) {
         fetch(url)
             .then(response => response.json())
@@ -174,138 +169,88 @@
                     onEachFeature: function(feature, layer) {
                         var dataKecamatan = kasusData.find(item => item.nama_kecamatan === kecamatan);
 
-                        if (dataKecamatan !== undefined) {
-                            if (feature.properties) {
-                                var popupContent = `
-                                <strong>Kecamatan:</strong> ${kecamatan}<br>
-                                <strong>Puskesmas:</strong> ${dataKecamatan.nama_puskesmas}<br>
-                                <strong>Jumlah Kasus DBD:</strong> ${dataKecamatan.jumlah_kasus}<br>
-                                <strong>Jumlah Kematian:</strong> ${dataKecamatan.jumlah_kematian}<br>
-                                <strong>Jumlah Rumah Diperiksa:</strong> ${dataKecamatan.jumlah_rumah_diperiksa}<br>
-                                <strong>Jumlah Rumah Bebas Jentik:</strong> ${dataKecamatan.jumlah_rumah_bebas_jentik}
-                            `;
+                        if (dataKecamatan) {
+                            var popupContent = `
+                                    <strong>Kecamatan:</strong> ${kecamatan}<br>
+                                    <strong>Puskesmas:</strong> ${dataKecamatan.nama_puskesmas}<br>
+                                    <strong>Jumlah Kasus DBD:</strong> ${dataKecamatan.jumlah_kasus}<br>
+                                    <strong>Jumlah Kematian:</strong> ${dataKecamatan.jumlah_kematian}<br>
+                                    <strong>Jumlah Rumah Diperiksa:</strong> ${dataKecamatan.jumlah_rumah_diperiksa}<br>
+                                    <strong>Jumlah Rumah Bebas Jentik:</strong> ${dataKecamatan.jumlah_rumah_bebas_jentik}
+                                `;
 
-                                layer.bindPopup(popupContent);
+                            layer.bindPopup(popupContent);
 
-                                layer.on("click", function() {
-                                    resetKecamatanColors(); // Kembalikan semua kecamatan ke warna awal
-
-                                    // Ubah warna kecamatan yang diklik ke warna_risiko
-                                    layer.setStyle({
-                                        fillColor: dataKecamatan.warna_risiko,
-                                        weight: 5,
-                                        opacity: 1,
-                                        fillOpacity: 0.7
-                                    });
-                                });
-                            }
+                            layer.on("click", function() {
+                                highlightKecamatan(kecamatan, dataKecamatan.warna_risiko);
+                            });
                         }
                     }
                 }).addTo(map);
 
-                // Simpan layer ke dalam objek geojsonLayers
                 geojsonLayers[kecamatan] = geojsonLayer;
-
-                map.fitBounds(geojsonLayer.getBounds());
-                updateKecamatanList();
             })
             .catch(error => console.error("Error loading GeoJSON file:", error));
     }
 
-    // Fungsi untuk mereset semua warna kecamatan ke warna awal
-    function resetKecamatanColors() {
-        Object.keys(geojsonLayers).forEach(kecamatan => {
-            var layer = geojsonLayers[kecamatan];
-            var dataKecamatan = kasusData.find(item => item.nama_kecamatan === kecamatan);
+    // Menambahkan marker untuk setiap Puskesmas
+    kasusData.forEach(data => {
+        if (data.latitude_puskesmas && data.longitude_puskesmas) {
+            var lat = parseFloat(data.latitude_puskesmas);
+            var lng = parseFloat(data.longitude_puskesmas);
 
-            if (layer && dataKecamatan) {
+            var marker = L.marker([lat, lng]).addTo(map);
+
+            var popupContent = `
+            <strong>Kecamatan:</strong> ${data.nama_kecamatan}<br>
+            <strong>Puskesmas:</strong> ${data.nama_puskesmas}<br>
+            <strong>Jumlah Kasus:</strong> ${data.jumlah_kasus}<br>
+            <strong>Jumlah Kematian:</strong> ${data.jumlah_kematian}<br>
+            <strong>CFR:</strong> ${data.CFR.toFixed(2)}%<br>
+            <strong>ABJ:</strong> ${(data.ABJ.toFixed(2))}%<br>
+            <strong>IR:</strong> ${data.IR.toFixed(2)}<br>
+        `;
+            marker.bindPopup(popupContent);
+
+            marker.on("click", function(e) {
+                var kecamatan = data.nama_kecamatan;
+                highlightKecamatan(kecamatan, data.warna_risiko);
+            });
+        }
+    });
+
+
+    function highlightKecamatan(kecamatan, warna) {
+        resetKecamatanColors();
+        if (geojsonLayers[kecamatan]) {
+            geojsonLayers[kecamatan].eachLayer(function(layer) {
                 layer.setStyle({
-                    fillColor: dataKecamatan.warna_risiko ?? "gray", // Kembali ke warna risiko default
-                    weight: 2,
+                    fillColor: warna,
+                    weight: 3,
                     opacity: 1,
-                    color: districtColors[kecamatan], // Border tetap dengan warna acak
+                    color: districtColors[kecamatan],
                     fillOpacity: 0.7
                 });
-            }
-        });
+            });
+        }
     }
 
-
-
-    // Fungsi untuk memperbarui daftar kecamatan dengan warna yang sesuai
-    function updateKecamatanList() {
-        kecamatanData.forEach(item => {
-            var colorBox = document.getElementById("color-box-" + item.nama_kecamatan);
-            if (colorBox) {
-                // Update the color box with the corresponding random color
-                colorBox.style.backgroundColor = districtColors[item.nama_kecamatan];
-            }
-        });
-    }
-
-
-
-
-    // Menambahkan Marker untuk Puskesmas
-    function addPuskesmasMarkers() {
-        var puskesmasIcon = L.icon({
-            iconUrl: "<?= base_url('/map/images/marker-icon.png'); ?>", // Pastikan ini menghasilkan URL yang benar
-            iconSize: [32],
-            iconAnchor: [16, 32],
-            popupAnchor: [0, -32]
-        });
-
-        kasusData.forEach(function(item) {
-            if (item.latitude_puskesmas && item.longitude_puskesmas) {
-                var marker = L.marker([parseFloat(item.latitude_puskesmas), parseFloat(item.longitude_puskesmas)], {
-                        icon: puskesmasIcon
-                    })
-                    .addTo(map)
-                    .bindPopup(`
-                <strong>Puskesmas:</strong> ${item.nama_puskesmas}<br>
-                <strong>Kecamatan:</strong> ${item.nama_kecamatan}<br>
-                <strong>Jumlah Kasus:</strong> ${item.jumlah_kasus}<br>
-                <strong>Jumlah Kematian:</strong> ${item.jumlah_kematian}<br>
-                <strong>IR:</strong> ${item.IR.toFixed(2)}<br>
-                <strong>CFR:</strong> ${item.CFR.toFixed(2)} %<br>
-                <strong>ABJ:</strong> ${item.ABJ.toFixed(2)}% <br>
-                
-            `);
-
-                // Menambahkan event listener untuk klik pada marker
-                marker.on('click', function() {
-                    // Memperbarui nilai IR, CFR, dan ABJ di elemen HTML
-                    // document.getElementById('ir').textContent = 'IR = ' + item.IR.toFixed(2);
-                    // document.getElementById('abj').textContent = 'ABJ = ' + (item.ABJ * 100).toFixed(2) + "%";
-                    // document.getElementById('cfr').textContent = 'CFR = ' + item.CFR.toFixed(2);
-
-                    // Mengubah warna overlay kecamatan yang terkait
-                    var kecamatan = item.nama_kecamatan;
-                    var geojsonLayer = geojsonLayers[kecamatan];
-
-
-                    console.log(item.warna_risiko)
-
-                    if (geojsonLayer) {
-                        geojsonLayer.setStyle({
-                            fillColor: item.warna_risiko, // Gunakan warna_risiko dari data puskesmas
-                            weight: 2,
-                            opacity: 1,
-                            color: "white",
-                            fillOpacity: 0.7
-                        });
-                    }
+    function resetKecamatanColors() {
+        Object.keys(geojsonLayers).forEach(kecamatan => {
+            geojsonLayers[kecamatan].eachLayer(function(layer) {
+                layer.setStyle({
+                    fillColor: "gray",
+                    weight: 2,
+                    opacity: 1,
+                    color: districtColors[kecamatan],
+                    fillOpacity: 0.7
                 });
-            }
+            });
         });
     }
 
-
-    // Loop untuk menambahkan GeoJSON berdasarkan data kecamatan
     <?php foreach ($kecamatan as $kec) : ?>
         addGeoJSONLayer("<?= base_url('/geojson/' . $kec['file_geojson']); ?>", "<?= $kec['nama_kecamatan']; ?>");
     <?php endforeach; ?>
-    // Tambahkan marker puskesmas setelah peta selesai dimuat
-    addPuskesmasMarkers();
 </script>
 <?= $this->include('templates/footer_user.php'); ?>

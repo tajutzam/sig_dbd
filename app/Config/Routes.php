@@ -12,6 +12,8 @@ $routes->get('/artikel', 'Guest::artikel');
 
 $routes->get('/login', 'AuthController::login');
 $routes->post('/login', 'AuthController::loginAttempt');
+$routes->get('/artikel/(:num)', 'ArtikelController::show/$1');
+
 
 
 $routes->group('', ['filter' => 'auth'], function ($routes) {
@@ -51,13 +53,14 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
     $routes->get('/admin/dbd/delete/(:num)', 'DataKasusDbdController::delete/$1');
     $routes->get('/admin/dbd/edit/(:segment)', 'DataKasusDbdController::edit/$1');
     $routes->post('/admin/dbd/update/(:segment)', 'DataKasusDbdController::update/$1');
-    $routes->post('/admin/dbd/export' , 'DataKasusDbdController::export');
+    $routes->post('/admin/dbd/export', 'DataKasusDbdController::export');
 
 
     $routes->get('/admin/artikel', 'ArtikelController::index');
     $routes->get('/admin/artikel/create', 'ArtikelController::create');
+
     $routes->post('/admin/artikel/store', 'ArtikelController::store');
-    
+
     $routes->get('/admin/artikel/edit/(:num)', 'ArtikelController::edit/$1');
     $routes->post('/admin/artikel/update/(:num)', 'ArtikelController::update/$1');
     $routes->get('/admin/artikel/delete/(:num)', 'ArtikelController::delete/$1');
